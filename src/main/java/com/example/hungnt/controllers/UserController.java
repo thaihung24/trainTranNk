@@ -5,7 +5,6 @@ import com.example.hungnt.models.UsersEntity;
 import com.example.hungnt.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -30,7 +29,7 @@ public class UserController {
         return userService.getUserById(id);
    }
    @RequestMapping(value = "user",method = RequestMethod.POST)
-    public Response addUser(@RequestBody @Valid UsersEntity user, BindingResult bindingResult ) throws Exception {
+    public Response addUser(@RequestBody @Valid UsersEntity user )  {
        String email = user.getEmail();
        System.out.println(email);
        UsersEntity u = new UsersEntity();
@@ -41,9 +40,6 @@ public class UserController {
         Response res = new Response();
         res.setStatus("200");
         res.setMessage("Thêm user thành công!");
-       if (bindingResult.hasErrors()){
-           throw new Exception("...");
-       }
         return  res;
     }
    @RequestMapping(value = "user/{id}",method = RequestMethod.DELETE)
