@@ -26,17 +26,24 @@ public class CustomerController {
     }
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public ResponseEntity<ResponseRegister> register(@RequestBody @Valid CustomersEntity customer){
-        Optional<CustomersEntity> cus = Optional.ofNullable(customerService.registerCustomer(customer));
+        CustomersEntity customersEntity = customerService.getCustomerByEmail(customer.getEmail());
         ResponseRegister res = new ResponseRegister();
-        if(cus.isPresent()){
-            res.setMessage("Đăng ký khách hàng thành công.");
-            res.setStatusCode(HttpStatus.OK);
-            res.setData(cus);
-            return new ResponseEntity<>(res,HttpStatus.OK);
-        }else {
-            res.setMessage("Đăng ký khách hàng thất bại.");
+        if(customersEntity==null){
+            CustomersEntity cus = customerService.registerCustomer(customer);
+            if(cus!=null){
+                res.setMessage("Đăng ký khách hàng thành công.");
+                res.setStatusCode(HttpStatus.OK);
+                res.setData(Optional.of(cus));
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }else {
+                res.setMessage("Đăng ký khách hàng thất bại.");
+                res.setStatusCode(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
+            }
+        }else{
+            res.setMessage("Tài khoản email này đã tồn tại.");
             res.setStatusCode(HttpStatus.BAD_REQUEST);
-            return new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
+            return  new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
         }
     }
     @RequestMapping(value = "/login",method = RequestMethod.POST)
@@ -54,7 +61,6 @@ public class CustomerController {
             res.setMessage("Sai thông tin tài khoản hoặc mật khẩu.");
             return new ResponseEntity<>(res,HttpStatus.BAD_GATEWAY);
         }
-
     }
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     public ResponseEntity<ResponseLogin> deleteCustomer(@PathVariable long id, HttpServletRequest request){
