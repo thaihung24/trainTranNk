@@ -1,8 +1,8 @@
 package com.example.hungnt.models;
 
 import javax.persistence.*;
-import java.util.Objects;
-
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 @Entity
 @Table(name = "users", schema = "testdata", catalog = "")
 public class UsersEntity {
@@ -12,13 +12,25 @@ public class UsersEntity {
     private long id;
     @Basic
     @Column(name = "email")
+    @Email(message = "Email không hợp lệ")
     private String email;
     @Basic
     @Column(name = "phone")
+    @NotEmpty(message = "Thiếu phone")
     private String phone;
     @Basic
     @Column(name = "address")
+    @NotEmpty(message = "Thiếu address")
     private String address;
+
+    public UsersEntity() {
+    }
+
+    public UsersEntity(String email, String phone, String address) {
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+    }
 
     public long getId() {
         return id;
@@ -52,16 +64,4 @@ public class UsersEntity {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UsersEntity that = (UsersEntity) o;
-        return id == that.id && Objects.equals(email, that.email) && Objects.equals(phone, that.phone) && Objects.equals(address, that.address);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, phone, address);
-    }
 }
