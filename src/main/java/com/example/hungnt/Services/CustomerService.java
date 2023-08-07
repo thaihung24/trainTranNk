@@ -25,13 +25,8 @@ public class CustomerService {
         return customerRepository.findCustomersEntitiesByEmail(email);
     }
     public CustomersEntity registerCustomer(CustomersEntity customer){
-        CustomersEntity cus = customerRepository.findCustomersEntitiesByEmail(customer.getEmail());
-        if(cus!=null){
-            customer.hasPassword(customer.getPassword());
-            return customerRepository.save(customer);
-        }
-        return null;
-
+        customer.hasPassword(customer.getPassword());
+        return customerRepository.save(customer);
     }
     public CustomersEntity login(RequestLogin req){
         CustomersEntity cus = customerRepository.findCustomersEntitiesByEmail(req.getEmail());
