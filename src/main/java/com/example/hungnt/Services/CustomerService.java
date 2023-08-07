@@ -21,9 +21,17 @@ public class CustomerService {
         }
 
     }
+    public CustomersEntity getCustomerByEmail(String email){
+        return customerRepository.findCustomersEntitiesByEmail(email);
+    }
     public CustomersEntity registerCustomer(CustomersEntity customer){
-        customer.hasPassword(customer.getPassword());
-        return customerRepository.save(customer);
+        CustomersEntity cus = customerRepository.findCustomersEntitiesByEmail(customer.getEmail());
+        if(cus!=null){
+            customer.hasPassword(customer.getPassword());
+            return customerRepository.save(customer);
+        }
+        return null;
+
     }
     public CustomersEntity login(RequestLogin req){
         CustomersEntity cus = customerRepository.findCustomersEntitiesByEmail(req.getEmail());
