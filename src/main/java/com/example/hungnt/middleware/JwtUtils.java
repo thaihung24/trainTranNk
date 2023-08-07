@@ -1,6 +1,5 @@
 package com.example.hungnt.middleware;
 
-import com.example.hungnt.Services.CustomerService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -14,14 +13,14 @@ public class JwtUtils {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 // Trả về token JWT sau khi đã cắt bỏ phần "Bearer "
                 String token= authHeader.substring(7);
-                Claims claims = Jwts.parser().setSigningKey("Hungw").parseClaimsJws(token).getBody();
-                Integer customerId = claims.get("customerId", Integer.class);
-                return customerId;
+                Claims claims = Jwts.parser().setSigningKey("JoinQuit123@").parseClaimsJws(token).getBody();
+                return claims.get("customerId",Integer.class);
             }
+            // Xác thực thất bại
             return -1;
         }
         catch(Exception e) {
-            //  Block of code to handle errors
+            //-1 là lỗi
             return -1;
         }
 

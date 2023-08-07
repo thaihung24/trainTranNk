@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,6 +20,10 @@ import java.util.Optional;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+    @RequestMapping(value = "/",method = RequestMethod.GET)
+    public ResponseEntity<List<CustomersEntity>> getListCustomer(){
+        return customerService.getListCustomer().isEmpty()? null: new ResponseEntity<>(customerService.getListCustomer(),HttpStatus.OK) ;
+    }
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public ResponseEntity<ResponseRegister> register(@RequestBody @Valid CustomersEntity customer){
         Optional<CustomersEntity> cus = Optional.ofNullable(customerService.registerCustomer(customer));
@@ -52,15 +57,26 @@ public class CustomerController {
 
     }
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
-    public boolean deleteCustomer(@PathVariable long id, HttpServletRequest request){
+    public ResponseEntity<ResponseLogin> deleteCustomer(@PathVariable long id, HttpServletRequest request){
         JwtUtils jwtUtils = new JwtUtils();
-        if(customerService.findCustomerById(jwtUtils.getTokenFromHeader(request)).isPresent()){
-            return true;
-        }else{
-            return false;
+        ResponseLogin res = new ResponseLogin();
+        CustomersEntity customer = customerService.findCustomerById(jwtUtils.getTokenFromHeader(request)).orElse(null);
+        if(customer!=null){
+            if(customerService.delete(id))
+            {
+                res.setStatusCode(HttpStatus.OK);
+                res.setMessage("Xoá người dùng thành công.");
+                return new ResponseEntity<>(res,HttpStatus.OK);
+            }
+            else{
+                res.setStatusCode(HttpStatus.BAD_REQUEST);
+                res.setMessage("Đã xảy ra lỗi trong quá trình xoá.");
+                return new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
+            }
         }
-
-
+        res.setStatusCode(HttpStatus.UNAUTHORIZED);
+        res.setMessage("Xác thực thất bại, vui lòng kiểm tra đăng nhập.");
+        return new ResponseEntity<>(res,HttpStatus.UNAUTHORIZED);
     }
 
 }

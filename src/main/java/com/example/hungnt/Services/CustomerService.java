@@ -6,12 +6,21 @@ import com.example.hungnt.utils.RequestLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
+    public List<CustomersEntity> getListCustomer(){
+        try{
+            return (List<CustomersEntity>) customerRepository.findAll();
+        }catch (Exception e){
+            return null;
+        }
+
+    }
     public CustomersEntity registerCustomer(CustomersEntity customer){
         customer.hasPassword(customer.getPassword());
         return customerRepository.save(customer);
@@ -29,14 +38,19 @@ public class CustomerService {
         return customerRepository.findById(id);
     }
     public boolean delete(long id){
-        if(customerRepository.findById(id).isPresent()){
-            customerRepository.deleteById(id);
-            return true;
-
-        }else{
+        try{
+            if(customerRepository.findById(id).isPresent()){
+                try {
+                    customerRepository.deleteById(id);
+                    return true;
+                }catch (Exception e){
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }catch (Exception e){
             return false;
         }
-
-
     }
 }

@@ -1,19 +1,12 @@
 package com.example.hungnt.models;
-
-import org.mindrot.jbcrypt.BCrypt;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-
 import java.util.Date;
-import java.util.Objects;
+
 
 @Entity
 @Table(name = "customers", schema = "testdata", catalog = "")
@@ -79,18 +72,6 @@ public class CustomersEntity {
         this.address = address;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CustomersEntity that = (CustomersEntity) o;
-        return id == that.id && Objects.equals(email, that.email) && Objects.equals(name, that.name) && Objects.equals(password, that.password) && Objects.equals(address, that.address);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, name, password, address);
-    }
     public void hasPassword(String password){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         setPassword(passwordEncoder.encode(password));
@@ -102,8 +83,8 @@ public class CustomersEntity {
     public String generateJWT(){
         return Jwts.builder()
                 .claim("customerId",getId())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
-                .signWith(SignatureAlgorithm.HS256,"Hungw")
+                .setExpiration(new Date(System.currentTimeMillis() + 900000))
+                .signWith(SignatureAlgorithm.HS256,"JoinQuit123@")
                 .compact();
     }
 }

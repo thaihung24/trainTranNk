@@ -2,7 +2,7 @@ package com.example.hungnt.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 @Table(name = "posts", schema = "testdata", catalog = "")
@@ -11,13 +11,17 @@ public class PostsEntity {
     @Id
     @Column(name = "id")
     private long id;
-    @Basic
-    @Column(name = "userId")
-    @NotEmpty(message = "Thieu UserId")
-    private long userId;
+//    @Basic
+//    @Column(name = "userid")
+//
+//    private long userId;
+    @ManyToOne
+    @JoinColumn(name="userid",referencedColumnName = "id")
+    private CustomersEntity customer;
+
     @Basic
     @Column(name = "content")
-    @NotEmpty(message = "Thieu Content")
+    @NotEmpty
     private String content;
 
     public long getId() {
@@ -28,13 +32,13 @@ public class PostsEntity {
         this.id = id;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
+//    public long getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(long userId) {
+//        this.userId = userId;
+//    }
 
     public String getContent() {
         return content;
@@ -43,17 +47,12 @@ public class PostsEntity {
     public void setContent(String content) {
         this.content = content;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PostsEntity that = (PostsEntity) o;
-        return id == that.id && userId == that.userId && Objects.equals(content, that.content);
+    public CustomersEntity getCustomer() {
+        return customer;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userId, content);
+    public void setCustomer(CustomersEntity customer) {
+        this.customer = customer;
     }
+
 }
