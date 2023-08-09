@@ -1,14 +1,11 @@
 package com.example.hungnt.Services;
-
 import com.example.hungnt.models.CustomersEntity;
 import com.example.hungnt.repositories.CustomerRepository;
 import com.example.hungnt.utils.RequestLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class CustomerService {
     @Autowired
@@ -19,7 +16,6 @@ public class CustomerService {
         }catch (Exception e){
             return null;
         }
-
     }
     public CustomersEntity getCustomerByEmail(String email){
         return customerRepository.findCustomersEntitiesByEmail(email);
