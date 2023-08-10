@@ -26,12 +26,18 @@ public class CustomerService {
     }
     public CustomersEntity login(RequestLogin req){
         CustomersEntity cus = customerRepository.findCustomersEntitiesByEmail(req.getEmail());
-        if(cus.comparePassword(req.getPassword())){
-            return cus;
-        }
-        else{
+        if(cus!=null){
+            if(cus.comparePassword(req.getPassword())){
+                return cus;
+            }
+            else{
+                return null;
+            }
+        }else {
             return null;
         }
+
+
     }
     public Optional<CustomersEntity> findCustomerById(long id){
         return customerRepository.findById(id);

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
@@ -46,14 +46,15 @@ public class CustomerController {
             return  new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
         }
     }
+
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public ResponseEntity<ResponseLogin> login(@RequestBody @Valid RequestLogin req){
-        Optional<CustomersEntity> cus = Optional.ofNullable(customerService.login(req));
+        CustomersEntity cus = Optional.ofNullable(customerService.login(req)).orElse(null);
         ResponseLogin res = new ResponseLogin();
-        if(cus.isPresent()){
+        if(cus!=null){
             res.setStatusCode(HttpStatus.OK);
             res.setMessage("Đăng nhập thành công.");
-            ResponseLoginData responseLoginData = new ResponseLoginData(cus.get().generateJWT(),cus.get().getEmail(),cus.get().getPassword(),cus.get().getName(),cus.get().getAddress());
+            ResponseLoginData responseLoginData = new ResponseLoginData(cus.generateJWT(),cus.getEmail(),cus.getPassword(),cus.getName(),cus.getAddress());
             res.setData(responseLoginData);
             return new ResponseEntity<>(res,HttpStatus.OK);
         }else{
