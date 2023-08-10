@@ -1,14 +1,11 @@
 package com.example.hungnt.middleware;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-
 import javax.servlet.http.HttpServletRequest;
 
 public class JwtUtils {
     public Integer getTokenFromHeader(HttpServletRequest request){
         try {
-            //  Block of code to try
             String authHeader = request.getHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 // Trả về token JWT sau khi đã cắt bỏ phần "Bearer "

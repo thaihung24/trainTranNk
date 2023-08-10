@@ -1,14 +1,11 @@
 package com.example.hungnt.Services;
-
 import com.example.hungnt.models.CustomersEntity;
 import com.example.hungnt.repositories.CustomerRepository;
 import com.example.hungnt.utils.RequestLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
-
 @Service
 public class CustomerService {
     @Autowired
@@ -19,28 +16,28 @@ public class CustomerService {
         }catch (Exception e){
             return null;
         }
-
     }
     public CustomersEntity getCustomerByEmail(String email){
         return customerRepository.findCustomersEntitiesByEmail(email);
     }
     public CustomersEntity registerCustomer(CustomersEntity customer){
-        CustomersEntity cus = customerRepository.findCustomersEntitiesByEmail(customer.getEmail());
-        if(cus!=null){
-            customer.hasPassword(customer.getPassword());
-            return customerRepository.save(customer);
-        }
-        return null;
-
+        customer.hasPassword(customer.getPassword());
+        return customerRepository.save(customer);
     }
     public CustomersEntity login(RequestLogin req){
         CustomersEntity cus = customerRepository.findCustomersEntitiesByEmail(req.getEmail());
-        if(cus.comparePassword(req.getPassword())){
-            return cus;
-        }
-        else{
+        if(cus!=null){
+            if(cus.comparePassword(req.getPassword())){
+                return cus;
+            }
+            else{
+                return null;
+            }
+        }else {
             return null;
         }
+
+
     }
     public Optional<CustomersEntity> findCustomerById(long id){
         return customerRepository.findById(id);

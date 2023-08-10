@@ -71,7 +71,6 @@ public class CustomersEntity {
     public void setAddress(String address) {
         this.address = address;
     }
-
     public void hasPassword(String password){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         setPassword(passwordEncoder.encode(password));
