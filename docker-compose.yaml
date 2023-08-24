@@ -1,0 +1,24 @@
+version: '3.8'
+## MYSQL config
+services:
+  mysql-microservice:
+    image: mysql:8.0.33
+    container_name: mysql-microservice
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - D:\docker\mysql8.0.33\lib:/var/lib/mysql
+    networks:
+      backend:
+    environment:
+      MYSQL_USER: hungnt
+      MYSQL_PASSWORD: Admin123
+      MYSQL_ROOT_PASSWORD: Admin123
+      MYSQL_DATABASE: testdata
+
+## create network
+networks:
+  backend:
+    name: springboot-app-network
+

@@ -6,8 +6,11 @@ import javax.validation.constraints.NotEmpty;
 public class RequestLogin {
     @Email(message = "Email không hợp lệ")
     private String email;
-    @NotEmpty(message = "password khong duoc trong")
+    @NotEmpty(message = "Mật khẩu không được bỏ trống")
     private String password;
+
+
+
 
     public String getEmail() {
         return email;

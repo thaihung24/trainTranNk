@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://10.56.66.60:3000/")
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
@@ -42,25 +42,27 @@ public class CustomerController {
             }
         }else{
             res.setMessage("Tài khoản email này đã tồn tại.");
-            res.setStatusCode(HttpStatus.BAD_REQUEST);
-            return  new ResponseEntity<>(res,HttpStatus.BAD_REQUEST);
+            res.setStatusCode(HttpStatus.UNPROCESSABLE_ENTITY);
+            return  new ResponseEntity<>(res,HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
     @RequestMapping(value = "/login",method = RequestMethod.POST)
     public ResponseEntity<ResponseLogin> login(@RequestBody @Valid RequestLogin req){
-        CustomersEntity cus = Optional.ofNullable(customerService.login(req)).orElse(null);
+
         ResponseLogin res = new ResponseLogin();
+        CustomersEntity cus = Optional.ofNullable(customerService.login(req)).orElse(null);
         if(cus!=null){
             res.setStatusCode(HttpStatus.OK);
             res.setMessage("Đăng nhập thành công.");
             ResponseLoginData responseLoginData = new ResponseLoginData(cus.generateJWT(),cus.getEmail(),cus.getPassword(),cus.getName(),cus.getAddress());
             res.setData(responseLoginData);
             return new ResponseEntity<>(res,HttpStatus.OK);
+
         }else{
-            res.setStatusCode(HttpStatus.BAD_GATEWAY);
+            res.setStatusCode(HttpStatus.UNPROCESSABLE_ENTITY);
             res.setMessage("Sai thông tin tài khoản hoặc mật khẩu.");
-            return new ResponseEntity<>(res,HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity<>(res,HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
     @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)

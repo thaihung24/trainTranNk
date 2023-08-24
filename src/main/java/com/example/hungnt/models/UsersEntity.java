@@ -1,8 +1,10 @@
 package com.example.hungnt.models;
-
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users", schema = "testdata", catalog = "")
 public class UsersEntity {
@@ -22,8 +24,22 @@ public class UsersEntity {
     @Column(name = "address")
     @NotEmpty(message = "Thiếu address")
     private String address;
-
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JoinTable(
+            name="customer_roles",
+            joinColumns = @JoinColumn(name="customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleEntity> roles = new HashSet<>();
     public UsersEntity() {
+    }
+
+    public Set<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<RoleEntity> roles) {
+        this.roles = roles;
     }
 
     public UsersEntity(String email, String phone, String address) {
